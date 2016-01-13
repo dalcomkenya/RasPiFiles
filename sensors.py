@@ -3,31 +3,33 @@ import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BCM)            # choose BCM or BOARD 
 import time
 
-#variables
+#assign the sensor and actuator gpio variables
 #
 #sensors
-v_s = 
-m_s = 
-t_s = 
+v_s = 16
+m_s = 20
+t_s = 21
 #
 #actuators
-stb = 
-srn = 
+stb = 19
+srn = 26
 
-#initialize sensors
+#initialize sensors as inputs with internal pulldown resistors
+#the bridging voltage divider circuit will make use of 1.2k and 2.2k resistors
+#the high resistance is to limit the current going into the circuit to below 50mA as specified for the pi
 #
 #vibration sensors
-GPIO.setup(v_s, GPIO.IN)  # set a port/pin as an input
+GPIO.setup(v_s, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 #
 #motion sensors
-GPIO.setup(m_s, GPIO.IN)  # set a port/pin as an input
+GPIO.setup(m_s, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 #
 #trap switches
-GPIO.setup(t_s, GPIO.IN)  # set a port/pin as an input
+GPIO.setup(t_s, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 #
 #
 
-#initialize actuators
+#initialize actuators as outputs. 
 #
 #siren
 GPIO.setup(srn, GPIO.OUT) # set a port/pin as an output  
@@ -46,8 +48,13 @@ def actuatorsOn:
 def actuatorsOn:
     GPIO.output(stb, 0) and GPIO.output(srn, 0)
 #
+#file name formatting of the image
+def get_file_name(): 
+    return datetime.datetime.now().strftime("%Y-%m-%d_%H.%M.%S.jpg")
+#
 #camera capture
 def camera:
+    fswebcam -r 1280x720 --no-banner image3.jpg
 #
 #send image over
 def sendImages:
