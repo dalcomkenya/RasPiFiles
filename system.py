@@ -36,45 +36,7 @@ sns =
 
 
 
-#		FUNCTIONS
-######################################################################################
-##
-##		take image with time-stamp
-def take_image():
-	os.system('fswebcam -r 500x300 --jpg --save /home/pi/media/%Y-%m-%d-%H:%M.jpg')
-##
-##		sensor interrupt callback
-def sensor_callback(channel):
-	actuators_on()
-	send_alert()
-##
-##		turn actuators on
-def actuators_on():
-	GPIO.output(stb, 0)
-	GPIO.output(srn, 0)
-##
-##		turn actuators off
-def actuators_on():
-	GPIO.output(stb, 1)
-	GPIO.output(srn, 1)
-##
-##
-def store_to_file():
-	filename = '%Y-%m-%d-%H:%M.txt'
-	sensors = open(filename, 'w')
-	sensors.write('pylonID')		##to be updated with actual pylon ID
-	sensors.write('\n')
-	sensors.write('vibration=1')
-	sensors.write('\n')
-	sensors.write('traps=1')
-	sensors.close()
-##
-##		send via https
-def send_alert():
-	#https code
-	
-######################################################################################
-######################################################################################
+
 
 
 #		SETUP
@@ -105,6 +67,48 @@ GPIO.setup(sns, GPIO.OUT, initial=0)
 ############################################################################################
 ############################################################################################
 
+
+#		FUNCTIONS
+######################################################################################
+##
+##		take image with time-stamp
+def take_image():
+	os.system('fswebcam -r 500x300 --jpg --save /home/pi/media/%Y-%m-%d-%H:%M.jpg')
+##
+##		sensor interrupt callback
+def sensor_callback(channel):
+	actuators_on()
+	take_image()
+	store_to_file()
+	send_alert()
+##
+##		turn actuators on
+def actuators_on():
+	GPIO.output(stb, 0)
+	GPIO.output(srn, 0)
+##
+##		turn actuators off
+def actuators_on():
+	GPIO.output(stb, 1)
+	GPIO.output(srn, 1)
+##
+##
+def store_to_file():
+	filename = '%Y-%m-%d-%H:%M.txt'
+	sensors = open(filename, 'w')
+	sensors.write('pylonID')		##to be updated with actual pylon ID
+	sensors.write('\n')
+	sensors.write('vibration=1')
+	sensors.write('\n')
+	sensors.write('traps=1')
+	sensors.close()
+##
+##		send via https
+def send_alert():
+	#https code
+	
+######################################################################################
+######################################################################################
 
 
 #		INTERRUPT CALLS
